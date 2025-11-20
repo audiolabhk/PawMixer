@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 // Initialize the client using the environment variable
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 
 export const generateCrossBreedImage = async (breed1Name: string, breed2Name: string): Promise<string> => {
   try {
@@ -17,9 +17,9 @@ export const generateCrossBreedImage = async (breed1Name: string, breed2Name: st
       },
     });
 
-    if (response.generatedImages && response.generatedImages.length > 0) {
-      const base64ImageBytes = response.generatedImages[0].image.imageBytes;
-      return `data:image/jpeg;base64,${base64ImageBytes}`;
+    const generatedImage = response.generatedImages?.[0];
+    if (generatedImage?.image?.imageBytes) {
+      return `data:image/jpeg;base64,${generatedImage.image.imageBytes}`;
     } else {
       throw new Error("No image generated.");
     }
